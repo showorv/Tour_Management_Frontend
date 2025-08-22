@@ -7,11 +7,15 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import PasswordShow from "@/components/ui/PasswordShow"
+import { useRegisterMutation } from "@/redux/features/auth/auth.api"
+import { toast } from "sonner"
 
 export function RegisterForm({
   className,
 
 }: React.ComponentProps<"form">) {
+
+  const [register] = useRegisterMutation()
 
   const formSchema = z.object({
    name: z.string().min(2, {
@@ -24,6 +28,10 @@ export function RegisterForm({
    confirmPassword: z.string().min(6, {
       message: "confirm password at least 6 characters",
     }),
+  }).refine((data)=> data.password === data.confirmPassword,{
+
+    message: "confirm password don't match",
+    path: ["confirmPassword"]
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -36,8 +44,26 @@ export function RegisterForm({
     }
   })
   
-  const onSubmit =(data: z.infer<typeof formSchema>)=>{
-    console.log(data);
+  const onSubmit = async (data: z.infer<typeof formSchema>)=>{
+
+    const userInfo = {
+      name: data.name,
+      email: data.email,
+      password: data.password
+    }
+
+    try {
+
+      const result = await register(userInfo).unwrap()
+      toast.success("user create successfully")
+      console.log(result);
+    } catch (error) {
+
+     
+      console.log(error);
+      
+    }
+
     
   }
   return (

@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {z} from "zod"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { useForm } from "react-hook-form"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -10,30 +10,34 @@ import PasswordShow from "@/components/ui/PasswordShow"
 import { useRegisterMutation } from "@/redux/features/auth/auth.api"
 import { toast } from "sonner"
 
+
+const formSchema = z.object({
+  name: z.string().min(2, {
+     message: "name must be at least 2 characters.",
+   }),
+  email: z.string().email(),
+  password: z.string()
+  .min(6, { message: "password at least 6 characters." })
+  .regex(/^(?=.*[A-Z]).{6,}$/, {
+    message: "Password must include at least one uppercase letter",
+  }),
+  confirmPassword: z.string().min(6, {
+     message: "confirm password at least 6 characters",
+   }),
+ }).refine((data)=> data.password === data.confirmPassword,{
+
+   message: "confirm password don't match",
+   path: ["confirmPassword"]
+ })
+
 export function RegisterForm({
   className,
 
 }: React.ComponentProps<"form">) {
 
   const [register] = useRegisterMutation()
-
-  const formSchema = z.object({
-   name: z.string().min(2, {
-      message: "name must be at least 2 characters.",
-    }),
-   email: z.email(),
-   password: z.string().min(6, {
-      message: "password at least 6 characters.",
-    }),
-   confirmPassword: z.string().min(6, {
-      message: "confirm password at least 6 characters",
-    }),
-  }).refine((data)=> data.password === data.confirmPassword,{
-
-    message: "confirm password don't match",
-    path: ["confirmPassword"]
-  })
-
+  const navigate = useNavigate()
+ 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,10 +56,13 @@ export function RegisterForm({
       password: data.password
     }
 
+    console.log(userInfo);
+    
     try {
 
       const result = await register(userInfo).unwrap()
       toast.success("user create successfully")
+      navigate("/verify", {state: data.name})
       console.log(result);
     } catch (error) {
 

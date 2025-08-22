@@ -21,7 +21,10 @@ const axiosBaseQuery =
         method,
         data,
         params,
-        headers,
+        headers: {
+          "Content-Type": "application/json", // ensure JSON
+          ...headers, // merge any custom headers
+        },
       })
       return { data: result.data }
     } catch (axiosError) {

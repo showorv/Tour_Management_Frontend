@@ -3,6 +3,7 @@ import axios from "axios"
 
 export const axiosInstance = axios.create({
     baseURL: config.baseUrl,
+    withCredentials: true // must to set cookie in frontend and if we use fetechbaseQuery then credentials: "include"
     // timeout: 1000,
     // headers: {'X-Custom-Header': 'foobar'}
   });

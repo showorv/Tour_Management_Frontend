@@ -8,6 +8,7 @@ import { useForm, type SubmitHandler, type FieldValues } from "react-hook-form"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import PasswordShow from "@/components/ui/PasswordShow"
 import { toast } from "sonner"
+import config from "@/config/index.config"
 
 
 
@@ -29,11 +30,16 @@ export function LoginForm({
 
     try {
       const res = await login(data).unwrap()
-      toast.success("Login successfull")
+
+      if(res.success){
+        toast.success("Login successfull")
+      
+        navigate("/")
+      }
       
       console.log(res);
       
-    } catch (err) {
+    } catch (err:any) {
       // toast.error(data.message)
       const message = err.data?.message;
       console.log(message);
@@ -102,7 +108,7 @@ export function LoginForm({
             Or continue with
           </span>
         </div>
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" className="w-full" onClick={()=> window.open(`${config.baseUrl}/auth/google`)}>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
           <path fill="#4285F4" d="M24 9.5c3.94 0 6.61 1.71 8.13 3.14l6-5.82C34.88 3.8 29.88 1.5 24 1.5 14.64 1.5 6.7 7.92 3.65 16.35l7.45 5.79C12.45 15.89 17.73 9.5 24 9.5z"/>
           <path fill="#34A853" d="M46.5 24c0-1.57-.14-3.08-.41-4.5H24v8.52h12.64c-.54 2.78-2.18 5.13-4.64 6.72l7.27 5.63C43.87 36.39 46.5 30.64 46.5 24z"/>

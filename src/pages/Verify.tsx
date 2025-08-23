@@ -10,6 +10,7 @@ import { useLocation, useNavigate } from "react-router"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSendOtpMutation, useVerifyOtpMutation } from "@/redux/features/auth/auth.api";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 const FormSchema = z.object({
     pin: z.string().min(6, {
@@ -25,7 +26,7 @@ export const Verify = () => {
     const [confirm, setConfirm] = useState(false)
     const [sendOtp] = useSendOtpMutation()
     const [verifyOtp] = useVerifyOtpMutation()
-    const [timer, setTimer] = useState(120)
+    const [timer, setTimer] = useState(5)
     console.log(location.state);
     
     const navigate = useNavigate()
@@ -44,10 +45,19 @@ export const Verify = () => {
     useEffect(()=>{
         const timerId = setInterval(()=>{
             if(email && confirm){
-                setTimer(prev => prev -1)
+                setTimer(prev => (prev > 0 ? prev -1 : 0))
             }
         },1000)
+
+        return ()=> clearInterval(timerId)
+
+       
+        
+
     },[email,confirm])
+
+    console.log("tick");
+
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -82,6 +92,8 @@ export const Verify = () => {
 
     const handleSubmit =async ()=>{
 
+
+
         try {
            
             const toasId = toast.loading("Sending Otp")
@@ -96,6 +108,25 @@ export const Verify = () => {
             
         }
        
+    }
+
+    const handleResendOtp = async ()=>{
+    
+
+      try {
+           
+        const toasId = toast.loading("Resending Otp")
+       const res = await sendOtp({email: email}).unwrap()
+
+       if(res.success){
+        toast.success("Otp resend", {id: toasId})
+        setTimer(5)
+       }
+    } catch (error) {
+        console.log(error);
+        
+    }
+   
     }
     
   return (
@@ -144,7 +175,14 @@ export const Verify = () => {
              </InputOTP>
            </FormControl>
         <FormDescription>
-            <Button variant={"link"}>Resend Otp</Button>
+            <Button variant={"link"} 
+            disabled = { timer !== 0} 
+            type="button" 
+            onClick={handleResendOtp} 
+            className={cn("p-2", { "cursor-pointer": timer===0, "text-gray-700": timer !==0})}
+            >
+              Resend Otp:
+            </Button>
             {timer}
         </FormDescription>
            <FormMessage />

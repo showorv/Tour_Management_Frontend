@@ -9,3 +9,10 @@ export interface ISidebar {
         component: ComponentType
     }[]  // array of objects => [{}]
 }
+
+
+export enum IRole {
+    SUPER_ADMIN= "SUPER_ADMIN",
+    ADMIN= "ADMIN",
+    USER= "USER"
+}

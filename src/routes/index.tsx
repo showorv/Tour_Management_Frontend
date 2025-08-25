@@ -7,10 +7,11 @@ import { About } from "@/pages/About";
 import Login  from "@/pages/Login";
 import Register  from "@/pages/Register";
 import { Verify } from "@/pages/Verify";
-import { Booking } from "@/pages/user/Booking";
+
 import { generateSidebarRoutes } from "@/utils/generateSidebarRoutes";
 import { createBrowserRouter } from "react-router";
 import { AdminSidebar } from "./AdminSidebar";
+import { UserSidebar } from "./UserSidebar";
 
 
 export const router = createBrowserRouter([
@@ -47,10 +48,7 @@ export const router = createBrowserRouter([
         path: "/user",
         Component: DashboardLayout,
         children: [
-            {
-                Component: Booking,
-                path: "booking"
-            }
+            ...generateSidebarRoutes(UserSidebar)
         ]
     },
 ])

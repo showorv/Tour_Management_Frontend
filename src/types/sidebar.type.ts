@@ -12,7 +12,7 @@ export interface ISidebar {
 
 
 export enum IRole {
-    SUPER_ADMIN= "SUPER_ADMIN",
+    SUPER_ADMIN= "SUPERADMIN",
     ADMIN= "ADMIN",
     USER= "USER"
 }

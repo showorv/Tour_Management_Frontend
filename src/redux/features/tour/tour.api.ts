@@ -12,7 +12,8 @@ export const tourApi = baseApi.injectEndpoints({
 
     
                 
-            })
+            }),
+            invalidatesTags: ["TOUR"]
         }),
 
         
@@ -23,6 +24,7 @@ export const tourApi = baseApi.injectEndpoints({
                 method:"GET"
                
             }),
+            providesTags: ["TOUR"],
 
             transformResponse: ((response)=> response.data)  // tahole shudhu data dekhabe . message success eshb dekhabe na
            

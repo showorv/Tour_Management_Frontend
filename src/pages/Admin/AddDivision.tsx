@@ -1,7 +1,12 @@
+import { DivisionModal } from "@/components/modules/admin/division/DivisionModal"
 
 
 export const AddDivision = () => {
   return (
-    <div>AddDivision</div>
+    <div>
+
+      <div>AddDivision</div>
+      <DivisionModal />
+    </div>
   )
 }

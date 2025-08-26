@@ -1,16 +1,39 @@
+import { DeleteConfirm } from "@/components/layout/DeleteConfirm";
 import { TourtypeModal } from "@/components/modules/admin/tour-type/TourtypeModal";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useGetTourTypeQuery } from "@/redux/features/tour/tour.api";
+import { useDeleteTourtypeMutation, useGetTourTypeQuery } from "@/redux/features/tour/tour.api";
 import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 export const AddTourType = () => {
   const { data, isLoading } = useGetTourTypeQuery(undefined);
+
+  const [deleteTourType] = useDeleteTourtypeMutation()
 
   console.log(data);
 
   if (isLoading) {
     return <div>Loading...</div>;
+  }
+
+  const handleDelete = async(tourId: string)=>{
+
+    const toastId = toast.loading("deleting..")
+    try {
+
+      const res = await deleteTourType(tourId)
+
+      if(res.data.success){
+        toast.success("Delete successfully",{id: toastId})
+      }
+
+      // console.log(res);
+      
+      
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   
@@ -37,9 +60,13 @@ export const AddTourType = () => {
             <TableRow key={item._id}>
               <TableCell className="font-medium w-full">{item.name}</TableCell>
               <TableCell>
-                <Button variant="destructive" size="sm" className="cursor-pointer">
+              
+
+               <DeleteConfirm onConfirm={()=> handleDelete(item._id)}>
+               <Button variant="destructive" size="sm" className="cursor-pointer">
                   <Trash2 />
                 </Button>
+               </DeleteConfirm>
               </TableCell>
             </TableRow>
           ))}

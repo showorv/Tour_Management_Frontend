@@ -22,7 +22,7 @@ const axiosBaseQuery =
         data,
         params,
         headers: {
-          "Content-Type": "application/json", // ensure JSON
+         
           ...headers, // merge any custom headers
         },
       })

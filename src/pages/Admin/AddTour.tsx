@@ -1,7 +1,9 @@
+import MultipleImageUpload from "@/components/MultipleImageUpload"
 import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import {
   Card,
-  CardAction,
+  
   CardContent,
   CardDescription,
   CardFooter,
@@ -10,12 +12,19 @@ import {
 } from "@/components/ui/card"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import type { FileMetadata } from "@/hooks/use-file-upload"
+import { cn } from "@/lib/utils"
 import { useGetDivisionQuery } from "@/redux/features/division/division.api"
-import { useGetTourTypeQuery } from "@/redux/features/tour/tour.api"
+import { useAddTourMutation, useGetTourTypeQuery } from "@/redux/features/tour/tour.api"
+import { format, formatISO } from "date-fns"
+import { CalendarIcon } from "lucide-react"
+import { useState } from "react"
 import { useForm, type SubmitHandler, type FieldValues } from "react-hook-form"
+import { toast } from "sonner"
 
 export function AddTour() {
 
@@ -25,12 +34,22 @@ export function AddTour() {
         location: "",
         description: "",
         division:"",
-        tourType: ""
+        tourType: "",
+        startDate:"",
+        endDate:""
     }
   })
 
   const {data: divisionData, isLoading: divisionLoading} = useGetDivisionQuery(undefined)
   const {data: tourTypeData, isLoading: tourtypeLoading } = useGetTourTypeQuery(undefined)
+  const [addTour] = useAddTourMutation()
+
+  // for image upload
+
+  const [ images, setImages] = useState<(File | FileMetadata)[] | []>([])
+
+  console.log("inside add tour",images);
+  
 
 
   const divisionOption = divisionData?.map((item: {_id: string, name: string})=> ({
@@ -48,7 +67,37 @@ export function AddTour() {
   console.log(tourtypeOption);
   
   const onSubmit: SubmitHandler<FieldValues> = async (data)=>{
-    console.log(data);
+
+    const tourData = {
+      ...data,
+      startDate: formatISO(data.startDate),
+      endDate: formatISO(data.endDate)
+
+
+      
+    }
+
+    const formData = new FormData()
+
+    formData.append("data", JSON.stringify(tourData))
+    images.forEach((item)=> formData.append("files", item as File))
+    console.log(tourData);
+
+    const tourId = toast.loading("tour adding")
+
+    try {
+
+    
+      
+      const res = await addTour(formData).unwrap()
+
+      if(res.success){
+        toast.success("Tour added Successfully", {id: tourId})
+      }
+    } catch (error) {
+      console.log(error);
+      
+    }
     
   }
   return (
@@ -98,14 +147,16 @@ export function AddTour() {
                     </FormItem>
                   )}
                 />
-           <FormField
+
+                <div className="flex gap-5">
+                <FormField
           control={form.control}
           name="division"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex-1 ">
               <FormLabel>Select Division</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value} disabled={divisionLoading} >
-                <FormControl>
+              <Select onValueChange={field.onChange} defaultValue={field.value} disabled={divisionLoading}  >
+                <FormControl className="w-full">
                   <SelectTrigger>
                     <SelectValue placeholder="select division" />
                   </SelectTrigger>
@@ -125,10 +176,10 @@ export function AddTour() {
           control={form.control}
           name="tourType"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex-1 ">
               <FormLabel>Select Tour Type</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value} disabled={tourtypeLoading}>
-                <FormControl>
+                <FormControl className="w-full">
                   <SelectTrigger>
                     <SelectValue placeholder="Select tour type" />
                   </SelectTrigger>
@@ -142,6 +193,93 @@ export function AddTour() {
             </FormItem>
           )}
         />
+                </div>
+           
+
+        <div className="flex gap-5">
+        <FormField
+          control={form.control}
+          name="startDate"
+          render={({ field }) => (
+            <FormItem className="flex flex-col flex-1">
+              <FormLabel>Select staring Date</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-full pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={new Date(field.value)}
+                    onSelect={field.onChange}
+                    disabled={(date) =>
+                      date < new Date( new Date().setDate( new Date().getDate()-1))
+                    }
+                    captionLayout="dropdown"
+                  />
+                </PopoverContent>
+              </Popover>
+             
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="endDate"
+          render={({ field }) => (
+            <FormItem className="flex flex-col flex-1">
+              <FormLabel>Select End Date</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-full pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={new Date(field.value)}
+                    onSelect={field.onChange}
+                    
+                    captionLayout="dropdown"
+                  />
+                </PopoverContent>
+              </Popover>
+             
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        </div>
             <FormField
                   control={form.control}
                   name="description"
@@ -159,7 +297,7 @@ export function AddTour() {
                   )}
                 />
             </form>
-
+              <MultipleImageUpload onChange={setImages}/>
           </Form>
       </CardContent>
       <CardFooter className="flex-col gap-2">

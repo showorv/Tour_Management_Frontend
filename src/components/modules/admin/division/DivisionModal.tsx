@@ -12,6 +12,7 @@ import {
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import type { FileMetadata } from "@/hooks/use-file-upload"
 import { useAddDivisionMutation } from "@/redux/features/division/division.api"
 import { useState } from "react"
 
@@ -29,7 +30,7 @@ export function DivisionModal() {
         }
     })
 
-    const [image, setImage] = useState<File | null>(null) // to get file in form from singleuploader. we can manually preview image by fileReaderurl or objectreaderurl from doc
+    const [image, setImage] = useState<File | FileMetadata | null>(null) // to get file in form from singleuploader. we can manually preview image by fileReaderurl or objectreaderurl from doc
    const [open, isOpen] = useState(false)
     // console.log("inside division", image);
     const [addDivison] = useAddDivisionMutation()

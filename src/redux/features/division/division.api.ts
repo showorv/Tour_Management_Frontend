@@ -21,8 +21,19 @@ export const divisionApi = baseApi.injectEndpoints({
         getDivision: builder.query({
             query:()=>({
                 url:"/division",
-                method:"GET"
-               
+                method:"GET",
+              
+            }),
+            providesTags: ["DIVISION"],
+
+            transformResponse: ((response)=> response.data)  // tahole shudhu data dekhabe . message success eshb dekhabe na
+           
+        }),
+        getSingleDivision: builder.query({
+            query:(slug)=>({
+                url:`/division/${slug}`,
+                method:"GET",
+            
             }),
             providesTags: ["DIVISION"],
 
@@ -35,4 +46,4 @@ export const divisionApi = baseApi.injectEndpoints({
 })
 
 
-export const {useAddDivisionMutation, useGetDivisionQuery} = divisionApi
+export const {useAddDivisionMutation, useGetDivisionQuery,useGetSingleDivisionQuery} = divisionApi

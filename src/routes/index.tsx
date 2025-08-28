@@ -15,6 +15,11 @@ import { UserSidebar } from "./UserSidebar";
 import { AuthCheck } from "@/utils/AuthCheck";
 import { IRole } from "@/types/sidebar.type";
 import { Unauthorized } from "@/pages/Unauthorized";
+import { Tours } from "@/pages/Tours";
+import { SingleTour } from "@/pages/SingleTour";
+
+import { Home } from "@/pages/Home";
+import { CreateBooking } from "@/pages/user/CreateBooking";
 
 
 export const router = createBrowserRouter([
@@ -23,9 +28,25 @@ export const router = createBrowserRouter([
         Component: App,
         children: [
             {
+                Component: Home,
+                index: true
+            },
+            {
                 path: "about",
                 Component: About
-            }
+            },
+            {
+                path:"/tours",
+                Component: Tours
+            },
+            {
+                path:"/tours/:id",
+                Component: SingleTour
+            },
+            {
+                path:"/booking/:id",
+                Component: CreateBooking
+            },
         ]
     },
     
@@ -63,4 +84,5 @@ export const router = createBrowserRouter([
         path:"/unauthorized",
         Component: Unauthorized
     },
+
 ])

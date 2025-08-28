@@ -22,6 +22,7 @@ import { IRole } from "@/types/sidebar.type"
 const navigationLinks = [
   { href: "/", label: "Home" , role: "PUBLIC"},
   { href: "/about", label: "About" ,  role: "PUBLIC"},
+  { href: "/tours", label: "Tour" ,  role: "PUBLIC"},
   { href: "/admin", label: "Dashboard" , role: IRole.ADMIN},
   { href: "/admin", label: "Dashboard", role: IRole.SUPER_ADMIN },
   { href: "/user", label: "Dashboard", role: IRole.USER},

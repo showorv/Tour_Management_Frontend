@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { useGetDivisionQuery, useGetSingleDivisionQuery } from '@/redux/features/division/division.api';
-import { useGetSingleTourQuery, useGetTourQuery, useGetTourTypeQuery } from '@/redux/features/tour/tour.api';
+import { useGetSingleTourQuery, useGetSingleTourTypeQuery, useGetTourQuery, useGetTourTypeQuery } from '@/redux/features/tour/tour.api';
 import { format } from 'date-fns';
 
 import { Link, useParams } from 'react-router'
@@ -22,11 +22,8 @@ export const SingleTour = () => {
   console.log(":divsison,",divisionData);
   
 
-  const { data: tourtypeData } = useGetTourTypeQuery(
-    {
-      _id: tourData?.tourType,
-      fields: "name",
-    },
+  const { data: tourtypeData } = useGetSingleTourTypeQuery(
+    tourData?.tourType,
     {
       skip: !tourData, // ✅ only run when tourData is ready
     }
@@ -95,7 +92,7 @@ export const SingleTour = () => {
       <strong>Division:</strong> {divisionData?.name}
     </p>
           <p>
-            <strong>Tour Type:</strong> {tourtypeData?.[0]?.name}
+            <strong>Tour Type:</strong> {tourtypeData?.name}
           </p>
           <p>
             <strong>Min Age:</strong> {tourData?.minAge} years

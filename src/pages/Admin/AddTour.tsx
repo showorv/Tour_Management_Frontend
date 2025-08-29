@@ -37,6 +37,12 @@ export function AddTour() {
         tourType: "",
         startDate:"",
         endDate:"",
+        costFrom: "",
+        arrivalLocation:"",
+        departureLocation:"",
+        maxGuest: "",
+        minAge: "",
+        // tourPlan: [{value: ""}],
         included: [{value: ""}],
         excluded: [{value: ""}],
     }
@@ -87,6 +93,9 @@ export function AddTour() {
       ...data,
       startDate: formatISO(data.startDate),
       endDate: formatISO(data.endDate),
+      costFrom: Number(data.costFrom),
+      minAge: Number(data.minAge),
+      maxGuest: Number(data.maxGuest),
       included: data.included.map((item: {value: string})=> item.value),
       excluded: data.excluded.map((item: {value: string})=> item.value),
 
@@ -118,6 +127,8 @@ export function AddTour() {
     console.log(formData);
     
   }
+
+
   return (
     <div className="w-full max-w-2xl mx-auto ">
 
@@ -165,6 +176,89 @@ export function AddTour() {
                     </FormItem>
                   )}
                 />
+            <FormField
+                  control={form.control}
+                  name="costFrom"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tour Cost</FormLabel>
+                      <FormControl>
+                        <Input {...field} type="number"/>
+                      </FormControl>
+                      <FormDescription className="sr-only">
+                        This is your division name.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+            <FormField
+                  control={form.control}
+                  name="minAge"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Minimum Age</FormLabel>
+                      <FormControl>
+                        <Input  {...field} type="number"/>
+                      </FormControl>
+                      <FormDescription className="sr-only">
+                        This is your division name.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+            <FormField
+                  control={form.control}
+                  name="maxGuest"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Maximum Guest</FormLabel>
+                      <FormControl>
+                        <Input  {...field}  type="number"/>
+                      </FormControl>
+                      <FormDescription className="sr-only">
+                        This is your division name.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+<FormField
+                  control={form.control}
+                  name="departureLocation"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Departure Location</FormLabel>
+                      <FormControl>
+                        <Input  {...field} />
+                      </FormControl>
+                      <FormDescription className="sr-only">
+                        This is your division name.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+            <FormField
+                  control={form.control}
+                  name="arrivalLocation"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Arival Location</FormLabel>
+                      <FormControl>
+                        <Input  {...field} />
+                      </FormControl>
+                      <FormDescription className="sr-only">
+                        This is your division name.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+           
 
                 <div className="flex gap-5">
                 <FormField

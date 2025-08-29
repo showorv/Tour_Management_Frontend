@@ -33,10 +33,22 @@ export const tourApi = baseApi.injectEndpoints({
         
 
         getTourType: builder.query({
-            query:(params)=>({
+            query:()=>({
                 url:"/tour/tour-type",
                 method:"GET",
-                params
+                
+               
+            }),
+            providesTags: ["TOUR"],
+
+            transformResponse: ((response)=> response.data)  // tahole shudhu data dekhabe . message success eshb dekhabe na
+           
+        }),
+        getSingleTourType: builder.query({
+            query:(id)=>({
+                url:`/tour/tour-type/${id}`,
+                method:"GET",
+                
                
             }),
             providesTags: ["TOUR"],
@@ -70,6 +82,19 @@ export const tourApi = baseApi.injectEndpoints({
             transformResponse: ((response: IResponse<ITour>  )=> response.data)  
            
         }),
+        getSingleTourbyId: builder.query<ITour, string>({
+            query:(id)=>({
+                url:`/tour/single/${id}`,
+                method:"GET",
+               
+               
+            }),
+            transformResponse: (response: IResponse<ITour>  ) => response.data,
+            providesTags: ["TOUR"],
+
+           
+           
+        }),
 
         deleteTourtype: builder.mutation({
             query:(tourId)=>({
@@ -88,4 +113,4 @@ export const tourApi = baseApi.injectEndpoints({
 })
 
 
-export const {useGetTourTypeQuery, useAddTourtypeMutation, useDeleteTourtypeMutation, useAddTourMutation, useGetTourQuery, useGetSingleTourQuery} = tourApi
+export const {useGetTourTypeQuery, useAddTourtypeMutation, useDeleteTourtypeMutation, useAddTourMutation, useGetTourQuery, useGetSingleTourQuery,useGetSingleTourTypeQuery,useGetSingleTourbyIdQuery} = tourApi

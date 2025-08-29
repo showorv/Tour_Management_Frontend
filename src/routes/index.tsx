@@ -19,7 +19,8 @@ import { Tours } from "@/pages/Tours";
 import { SingleTour } from "@/pages/SingleTour";
 
 import { Home } from "@/pages/Home";
-import { CreateBooking } from "@/pages/user/CreateBooking";
+import CreateBooking from "@/pages/CreateBooking";
+
 
 
 export const router = createBrowserRouter([

@@ -1,12 +1,19 @@
 import TourFilter from "@/components/modules/tours/TourFIlter";
 import { Button } from "@/components/ui/button";
 import { useGetTourQuery } from "@/redux/features/tour/tour.api"
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 
 
 export const Tours = () => {
 
-  const { data, isLoading} = useGetTourQuery(undefined)
+  const [searchParams] = useSearchParams()
+
+  const division = searchParams.get("division") || undefined
+  const tourType = searchParams.get("tourType") || undefined
+
+  const { data, isLoading} = useGetTourQuery({division, tourType})
+
+
   console.log(data);
   
   if(isLoading){

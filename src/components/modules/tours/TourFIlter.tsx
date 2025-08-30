@@ -12,17 +12,23 @@ import {
 import { useGetDivisionQuery } from "@/redux/features/division/division.api";
 import { useGetTourTypeQuery } from "@/redux/features/tour/tour.api";
 import { useState } from "react";
+import { useSearchParams } from "react-router";
 
 
 export default function TourFilter() {
 
 
-    const [selectedDivision, setSelectedDivision] = useState<string | undefined>(undefined)
-    const [selectedTourtype, setSelectedtourtype] = useState<string | undefined>(undefined)
+    // const [selectedDivision, setSelectedDivision] = useState<string | undefined>(undefined)
+    // const [selectedTourtype, setSelectedtourtype] = useState<string | undefined>(undefined)
 
-    console.log(selectedDivision);
+    // console.log(selectedDivision); // use state diye set na kore searchparams diye korbo
+
+    const [searchParams, setSearchParams] = useSearchParams()
     
-
+    console.log(searchParams);
+    
+    const selectedDivision = searchParams.get("division") || undefined
+    const selectedTourtype = searchParams.get("tourType") || undefined
 
   const { data: divisionData, isLoading: divisionIsLoading } =
     useGetDivisionQuery(undefined);
@@ -45,9 +51,31 @@ export default function TourFilter() {
   );
 
 
+  const handleDivisionSearch = (value: string)=>{
+
+    const params = new URLSearchParams(searchParams)
+    params.set("division", value)
+    setSearchParams(params)
+    // console.log(value);
+    
+  }
+  const handleTourTypeSearch = (value: string)=>{
+
+    const params = new URLSearchParams(searchParams)
+    params.set("tourType", value)
+    setSearchParams(params)
+    // console.log(value);
+    
+  }
+
 
   const handleClearFilter = () => {
     
+    const params = new URLSearchParams(searchParams)
+
+    params.delete("division")
+    params.delete("tourType")
+    setSearchParams(params)
     
   };
 
@@ -62,8 +90,8 @@ export default function TourFilter() {
       <div>
         <Label className="mb-2">Division to visit</Label>
         <Select
-          onValueChange={(value) => setSelectedDivision(value)}
-         
+          onValueChange={handleDivisionSearch}
+         value={selectedDivision? selectedDivision : ""}
           disabled={divisionIsLoading}
         >
           <SelectTrigger className="w-full">
@@ -84,8 +112,8 @@ export default function TourFilter() {
       <div>
         <Label className="mb-2">Tour Type</Label>
         <Select
-        onValueChange={(value) => setSelectedtourtype(value)}
-        
+        onValueChange={handleTourTypeSearch}
+        value={selectedTourtype ? selectedTourtype : ""}
           disabled={tourTypeIsLoading}
         >
           <SelectTrigger className="w-full">

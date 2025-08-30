@@ -20,6 +20,9 @@ import { SingleTour } from "@/pages/SingleTour";
 
 import { Home } from "@/pages/Home";
 import CreateBooking from "@/pages/CreateBooking";
+import { Success } from "@/pages/payment/Success";
+import { PaymentFail } from "@/pages/payment/PaymentFail";
+import { PaymentCancel } from "@/pages/payment/PaymentCancel";
 
 
 
@@ -46,7 +49,7 @@ export const router = createBrowserRouter([
             },
             {
                 path:"/booking/:id",
-                Component: CreateBooking
+                Component: AuthCheck( CreateBooking)
             },
         ]
     },
@@ -84,6 +87,18 @@ export const router = createBrowserRouter([
     {
         path:"/unauthorized",
         Component: Unauthorized
+    },
+    {
+        path:"/payment/success",
+        Component: Success
+    },
+    {
+        path:"/payment/faild",
+        Component: PaymentFail
+    },
+    {
+        path:"/payment/cancel",
+        Component: PaymentCancel
     },
 
 ])

@@ -17,6 +17,10 @@ export const AuthCheck = (Component: ComponentType, checkRole?: IRole | IRole []
         //     return <Navigate  to= "/unauthorized"/>
         // }
 
+        if(!data|| !data.data.email){
+            return <Navigate  to= "/login"/>   // for authentication
+        }
+
         if(!isLoading){
 
 
@@ -28,9 +32,7 @@ export const AuthCheck = (Component: ComponentType, checkRole?: IRole | IRole []
             }
 
 
-            if(!data.data.email){
-                return <Navigate  to= "/login"/>   // for authentication
-            }
+          
         }
 
        

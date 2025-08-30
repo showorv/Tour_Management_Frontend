@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { useCreateBookingMutation } from "@/redux/features/booking/booking.api";
 
 import { useGetSingleTourbyIdQuery } from "@/redux/features/tour/tour.api";
 
@@ -13,6 +14,7 @@ export default function CreateBooking() {
 
   const {id } = useParams();
   const { data: tourData, isLoading, isError } = useGetSingleTourbyIdQuery(id as string);
+  const [createBooking] = useCreateBookingMutation()
   // const [createBooking] = useCreateBookingMutation();
 
   console.log("tour details",tourData);
@@ -45,14 +47,16 @@ export default function CreateBooking() {
       };
     }
 
-    // try {
-    //   const res = await createBooking(bookingData).unwrap();
-    //   if (res.success) {
-    //     window.open(res.data.paymentUrl);
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    try {
+      const res = await createBooking(bookingData).unwrap();
+      console.log(res);
+      
+      if (res.success) {
+        window.open(res.data.paymentUrl);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   if (isLoading) {

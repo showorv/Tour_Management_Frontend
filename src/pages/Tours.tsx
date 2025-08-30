@@ -1,3 +1,4 @@
+import TourFilter from "@/components/modules/tours/TourFIlter";
 import { Button } from "@/components/ui/button";
 import { useGetTourQuery } from "@/redux/features/tour/tour.api"
 import { Link } from "react-router";
@@ -8,10 +9,13 @@ export const Tours = () => {
   const { data, isLoading} = useGetTourQuery(undefined)
   console.log(data);
   
+  if(isLoading){
+    <div>loading...</div>
+  }
 
   return (
    <div className="container mx-auto px-5 py-8 grid grid-cols-12 gap-5">
-      {/* <TourFilters /> */}
+      <TourFilter />
       <div className="col-span-9 w-full">
         {data?.map((item) => (
           <div

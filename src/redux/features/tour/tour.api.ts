@@ -33,15 +33,15 @@ export const tourApi = baseApi.injectEndpoints({
         
 
         getTourType: builder.query({
-            query:()=>({
+            query:(params)=>({
                 url:"/tour/tour-type",
                 method:"GET",
-                
+                params
                
             }),
             providesTags: ["TOUR"],
 
-            transformResponse: ((response)=> response.data)  // tahole shudhu data dekhabe . message success eshb dekhabe na
+            // transformResponse: ((response)=> response.data)  // tahole shudhu data dekhabe . message success eshb dekhabe na
            
         }),
         getSingleTourType: builder.query({

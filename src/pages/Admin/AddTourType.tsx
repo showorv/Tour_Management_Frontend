@@ -5,9 +5,24 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useDeleteTourtypeMutation, useGetTourTypeQuery } from "@/redux/features/tour/tour.api";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+import { useState } from "react";
 
 export const AddTourType = () => {
-  const { data, isLoading } = useGetTourTypeQuery(undefined);
+
+  const [currentPage, setCurrentPage] = useState(1)
+
+  console.log(currentPage);
+  
+  const { data, isLoading } = useGetTourTypeQuery({page: currentPage});
 
   const [deleteTourType] = useDeleteTourtypeMutation()
 
@@ -16,6 +31,10 @@ export const AddTourType = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  const totalPage = data?.metaData?.totalPage
+  console.log(totalPage);
+  
 
   const handleDelete = async(tourId: string)=>{
 
@@ -56,7 +75,7 @@ export const AddTourType = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.map((item: { _id: string; name: string }) => (
+          {data?.data?.map((item: { _id: string; name: string }) => (
             <TableRow key={item._id}>
               <TableCell className="font-medium w-full">{item.name}</TableCell>
               <TableCell>
@@ -73,6 +92,24 @@ export const AddTourType = () => {
         </TableBody>
       </Table>
       </div>
+            {totalPage > 1 && 
+          <Pagination>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious onClick={()=> setCurrentPage(prev=> prev -1)} className={ currentPage === 1 ? "pointer-events-none opacity-50": "cursor-pointer"} />
+        </PaginationItem>
+
+        {Array.from({length: totalPage}, (_,value)=> value+1 ).map(page =>  
+           <PaginationItem key={page} onClick={()=> setCurrentPage(page)}>
+          <PaginationLink isActive={currentPage===page}>{page}</PaginationLink>
+        </PaginationItem> )}
+      
+       
+        <PaginationItem>
+          <PaginationNext onClick={()=> setCurrentPage(prev=> prev +1)} className={ currentPage === totalPage ? "pointer-events-none opacity-50": "cursor-pointer"}/>
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>}
     </div>
   );
 };

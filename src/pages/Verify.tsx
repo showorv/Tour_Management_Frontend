@@ -103,7 +103,14 @@ export const Verify = () => {
             toast.success("Otp send", {id: toasId})
             setConfirm(true)
            }
+
+           if(res.message === "user not found"){
+            toast.error("user not found")
+           }
+         
         } catch (error) {
+          
+           
             console.log(error);
             
         }
